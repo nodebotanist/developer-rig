@@ -118,3 +118,23 @@ export function fetchManifest(host, clientId, username, version, channelId, secr
       onError(error);
   });
 }
+
+export function fetchUserInfo(host, accessToken, onSuccess, onError) {
+  const api = 'https://' + host + '/helix/users';
+  return fetch(api, {
+    method: 'GET',
+    headers: {
+      'authorization': 'Bearer ' + accessToken,
+    }
+  }).then(response => response.json())
+    .then(respJson => {
+      const data = respJson.data;
+      if (!data && data.length === 0) {
+        onError('Unable to get user data for token: ', accessToken);
+        return null;
+      }
+      onSuccess(data[0]);
+    }).catch(error => {
+      onError(error);
+    })
+}

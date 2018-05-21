@@ -4,10 +4,11 @@ import { ExtensionViewContainer } from '../extension-view-container';
 import { ExtensionRigConsole } from '../console';
 import { ExtensionViewDialog } from '../extension-view-dialog';
 import { RigConfigurationsDialog } from '../rig-configurations-dialog';
+import { LoginDialog } from '../login-dialog';
 import { EditViewDialog } from '../edit-view-dialog';
 import { createExtensionObject } from '../util/extension';
 import { createSignedToken } from '../util/token';
-import { fetchManifest, fetchExtensionManifest } from '../util/api';
+import { fetchManifest, fetchExtensionManifest, fetchUserInfo } from '../util/api';
 import { EXTENSION_VIEWS, BROADCASTER_CONFIG, LIVE_CONFIG, CONFIGURATIONS } from '../constants/nav-items'
 import { ViewerTypes } from '../constants/viewer-types';
 import { OverlaySizes } from '../constants/overlay-sizes';
@@ -32,11 +33,13 @@ export class Rig extends Component {
       showExtensionsView: false,
       showConfigurations: false,
       showEditView: false,
+      showLoginView: false,
       idToEdit: 0,
       selectedView: EXTENSION_VIEWS,
       extension: {},
       userId: '',
       error: '',
+      login: {},
     };
   }
 
@@ -46,6 +49,7 @@ export class Rig extends Component {
 
   componentWillMount() {
     this._initLocalStorage();
+    this._setLogin();
   }
 
   openConfigurationsHandler = () => {
@@ -131,6 +135,12 @@ export class Rig extends Component {
     fetchExtensionManifest('api.twitch.tv', this.state.clientId, this.state.version, token, this._onConfigurationSuccess, this._onConfigurationError);
   }
 
+  loginHandler = () => {
+    this.setState({
+      showLoginView: true
+    });
+  }
+
   _onConfigurationSuccess = (data) => {
     this.setState(data);
   }
@@ -204,11 +214,13 @@ export class Rig extends Component {
       <div>
         <RigNav
           ref="rigNav"
+          login={this.state.login}
           selectedView={this.state.selectedView}
           viewerHandler={this.viewerHandler}
           configHandler={this.configHandler}
           liveConfigHandler={this.liveConfigHandler}
           openConfigurationsHandler={this.openConfigurationsHandler}
+          loginHandler={this.loginHandler}
           error={this.state.error}/>
         <ExtensionViewContainer
           ref="extensionViewContainer"
@@ -231,6 +243,12 @@ export class Rig extends Component {
             idToEdit={this.state.idToEdit}
             show={this.state.showEditView}
             views={this._getExtensionViews()}
+            closeHandler={this.closeEditViewHandler}
+            saveViewHandler={this.editViewHandler}
+          />}
+        {this.state.showLoginView &&
+          <LoginDialog
+            ref="loginDialog"
             closeHandler={this.closeEditViewHandler}
             saveViewHandler={this.editViewHandler}
           />}
@@ -269,5 +287,37 @@ export class Rig extends Component {
     this.setState({
       extensionViews: JSON.parse(extensionViewsValue)
     })
+  }
+
+  _setLogin() {
+    const windowHash = window.location.hash;
+    const rigLogin = localStorage.getItem('rigLogin');
+    if (windowHash.includes('access_token')) {
+      const accessTokenKey = 'access_token=';
+      const accessTokenIndex = windowHash.indexOf(accessTokenKey);
+      const ampersandIndex = windowHash.indexOf('&');
+      const accessToken = windowHash.substring(accessTokenIndex + accessTokenKey.length, ampersandIndex);
+      fetchUserInfo('api.twitch.tv', accessToken, resp => {
+        this.setState({
+          accessToken: accessToken,
+          login: resp,
+        });
+        localStorage.setItem('rigLogin', JSON.stringify({
+          login: resp,
+          accessToken: accessToken,
+        }));
+      }, err => {
+        this.setState({
+          error: err,
+        });
+      })
+    }
+    else if (rigLogin) {
+      const login = JSON.parse(rigLogin);
+      this.setState({
+        accessToken: login.accessToken,
+        login: login.login,
+      })
+    }
   }
 }
