@@ -4,7 +4,6 @@ import { ExtensionViewContainer } from '../extension-view-container';
 import { ExtensionRigConsole } from '../console';
 import { ExtensionViewDialog } from '../extension-view-dialog';
 import { RigConfigurationsDialog } from '../rig-configurations-dialog';
-import { LoginDialog } from '../login-dialog';
 import { EditViewDialog } from '../edit-view-dialog';
 import { createExtensionObject } from '../util/extension';
 import { createSignedToken } from '../util/token';
@@ -243,12 +242,6 @@ export class Rig extends Component {
             idToEdit={this.state.idToEdit}
             show={this.state.showEditView}
             views={this._getExtensionViews()}
-            closeHandler={this.closeEditViewHandler}
-            saveViewHandler={this.editViewHandler}
-          />}
-        {this.state.showLoginView &&
-          <LoginDialog
-            ref="loginDialog"
             closeHandler={this.closeEditViewHandler}
             saveViewHandler={this.editViewHandler}
           />}
