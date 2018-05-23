@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './component.sass';
-import { EXTENSION_VIEWS, BROADCASTER_CONFIG, LIVE_CONFIG, CONFIGURATIONS } from '../constants/nav-items'
+import { EXTENSION_VIEWS, BROADCASTER_CONFIG, LIVE_CONFIG, CONFIGURATIONS, PRODUCT_MANAGEMENT } from '../constants/nav-items'
 import { UserDropdown } from '../user-dropdown';
 import { LoginButton } from '../login-button';
 
@@ -32,6 +32,9 @@ export class RigNav extends Component {
           <a
             className={this.props.selectedView === CONFIGURATIONS ? "top-nav-item top-nav-item__selected" : "top-nav-item"}
             onClick={this.openConfigurationsHandler}>Configurations</a>
+          <a
+            className={this.props.selectedView === PRODUCT_MANAGEMENT ? "top-nav-item top-nav-item__selected" : "top-nav-item"}
+            onClick={this.props.openProductManagementHandler}>Manage Products</a>
           {this.props.login.login ? <UserDropdown login={this.props.login} /> : <LoginButton loginHandler={this.props.loginHandler}/>}
         </div>
       );
@@ -40,6 +43,7 @@ export class RigNav extends Component {
 }
 
 RigNav.propTypes = {
+  openProductManagementHandler: PropTypes.func,
   openConfigurationsHandler: PropTypes.func,
   viewerHandler: PropTypes.func,
   configHandler: PropTypes.func,
