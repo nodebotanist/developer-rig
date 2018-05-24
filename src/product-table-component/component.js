@@ -8,10 +8,10 @@ export class ProductTable extends Component {
 
     this.state = {
       products: [
-        {"domain": "twitch.ext.dppeppelTest", "sku": "test1", "cost": {"amount": 1, "type": "bits"}, "inDevelopment": "false", "displayName": "Test 1"},
-        {"domain": "twitch.ext.dppeppelTest", "sku": "test2", "cost": {"amount": 4, "type": "bits"}, "inDevelopment": "true", "displayName": "Test 1", "broadcast": "true"},
-        {"domain": "twitch.ext.dppeppelTest", "sku": "test3", "cost": {"amount": 5000, "type": "bits"}, "inDevelopment": "true", "displayName": "Test 1", "broadcast": "true"},
-        {"domain": "twitch.ext.dppeppelTest", "sku": "test4", "cost": {"amount": 1, "type": "bits"}, "displayName": "Test 1"}
+        {"sku": "test1", "cost": {"amount": 1, "type": "bits"}, "inDevelopment": "false", "displayName": "Test 1"},
+        {"sku": "test2", "cost": {"amount": 4, "type": "bits"}, "inDevelopment": "true", "displayName": "Test 1", "broadcast": "true"},
+        {"sku": "test3", "cost": {"amount": 5000, "type": "bits"}, "inDevelopment": "true", "displayName": "Test 1", "broadcast": "true"},
+        {"sku": "test4", "cost": {"amount": 1, "type": "bits"}, "displayName": "Test 1"}
       ]
     };
   }
@@ -66,10 +66,25 @@ export class ProductTable extends Component {
     });
   }
 
+  handleAddProductClick(event) {
+    this.setState((prevState, props) => {
+      let products = [...prevState['products']];
+      let product = {
+        "sku": "",
+        "cost": {"amount": 1, "type": "bits"},
+        "inDevelopment": "true",
+        "displayName": "",
+        "broadcast": "true"
+      };
+      products.push(product)
+      return {products: products};
+    });
+  }
+
   render() {
     let productRows = this.state.products.map((p, i) => {
       return (
-        <ProductRow key={p.sku} product={p}
+        <ProductRow key={i} product={p}
           handleDisplayNameChange={this.handleDisplayNameChange.bind(this, i)}
           handleSkuChange={this.handleSkuChange.bind(this, i)}
           handleAmountChange={this.handleAmountChange.bind(this, i)}
@@ -84,11 +99,14 @@ export class ProductTable extends Component {
         <div className="product-table__header">
           <div className="text">Product Name</div>
           <div className="text">SKU</div>
-          <div className="text">Amount (In Bits)</div>
+          <div className="text">Amount (in Bits)</div>
           <div className="select">In Development</div>
           <div className="select">Broadcast</div>
         </div>
         {productRows}
+        <button className="add-product-btn" onClick={this.handleAddProductClick.bind(this)}>
+          Add Product
+        </button>
       </div>
     );
   }

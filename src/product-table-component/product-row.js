@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function ProductRow(props) {
+export const ProductRow = (props) => {
   return (
     <div className="product-table__row">
       <input type="text" 

@@ -120,7 +120,6 @@ export class Rig extends Component {
   openProductManagementHandler = () => {
     this.setState({
       selectedView: PRODUCT_MANAGEMENT,
-      showProductManagementView: true
     });
   }
 
@@ -218,19 +217,8 @@ export class Rig extends Component {
   }
 
   render() {
-    return (
+    let view = (
       <div>
-        <RigNav
-          ref="rigNav"
-          login={this.state.login}
-          selectedView={this.state.selectedView}
-          viewerHandler={this.viewerHandler}
-          configHandler={this.configHandler}
-          liveConfigHandler={this.liveConfigHandler}
-          openConfigurationsHandler={this.openConfigurationsHandler}
-          openProductManagementHandler={this.openProductManagementHandler}
-          loginHandler={this.loginHandler}
-          error={this.state.error}/>
         <ExtensionViewContainer
           ref="extensionViewContainer"
           mode={this.state.mode}
@@ -255,14 +243,35 @@ export class Rig extends Component {
             closeHandler={this.closeEditViewHandler}
             saveViewHandler={this.editViewHandler}
           />}
-        {this.state.showProductManagementView &&
-          <ProductManagementViewContainer />}
         <RigConfigurationsDialog
           show={this.state.showConfigurations}
           config={this.state.manifest}
           closeConfigurationsHandler={this.closeConfigurationsHandler}
           refreshConfigurationsHandler={this.refreshConfigurationsHandler} />
         <ExtensionRigConsole />
+      </div>
+    );
+
+    if (this.state.selectedView === PRODUCT_MANAGEMENT) {
+      view = (
+        <ProductManagementViewContainer />
+      );
+    }
+
+    return (
+      <div>
+        <RigNav
+          ref="rigNav"
+          login={this.state.login}
+          selectedView={this.state.selectedView}
+          viewerHandler={this.viewerHandler}
+          configHandler={this.configHandler}
+          liveConfigHandler={this.liveConfigHandler}
+          openConfigurationsHandler={this.openConfigurationsHandler}
+          openProductManagementHandler={this.openProductManagementHandler}
+          loginHandler={this.loginHandler}
+          error={this.state.error}/>
+        {view}
       </div>
     );
   }
