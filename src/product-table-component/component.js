@@ -80,20 +80,16 @@ export class ProductTable extends Component {
     });
 
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>SKU</th>
-            <th>Amount (In Bits)</th>
-            <th>In Development</th>
-            <th>Broadcast</th>
-          </tr>
-        </thead>
-        <tbody>
-          {productRows}
-        </tbody>
-      </table>
+      <div className="product-table">
+        <div className="product-table__header">
+          <div className="text">Product Name</div>
+          <div className="text">SKU</div>
+          <div className="text">Amount (In Bits)</div>
+          <div className="select">In Development</div>
+          <div className="select">Broadcast</div>
+        </div>
+        {productRows}
+      </div>
     );
   }
 }
