@@ -254,7 +254,7 @@ export class Rig extends Component {
 
     if (this.state.selectedView === PRODUCT_MANAGEMENT) {
       view = (
-        <ProductManagementViewContainer />
+        <ProductManagementViewContainer clientId={this.state.clientId} token={this.state.accessToken} />
       );
     }
 

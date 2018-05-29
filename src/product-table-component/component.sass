@@ -1,13 +1,33 @@
 .product-table
-  width: 100%
-  max-width: 1000px
-  padding: 0 20%
-  
+  min-width: 1000px
+  max-width: 1250px
+  margin-top: 3rem
+  overflow-x: hidden
+
+.product-table__error
+  background: #faf9fa
+  border: 1px solid #dad8de
+  border-left-width: 0.3rem
+  border-left-color: #fc3636
+  padding: 1rem
+  margin-bottom: 1rem
+
+  *
+    margin: 0
+    padding: 0
+    box-sizing: border-box
+    line-height: 2rem
+
+  h4
+    font-weight: 600
+    font-size: 1.2rem
+
 .product-table__header
   display: flex
   justify-content: space-between
   align-items: center
   margin-bottom: 3px
+  font-family: HelveticaNeue-Medium;
 
   *
     padding-left: 3px
@@ -23,8 +43,9 @@
   justify-content: space-between
   align-items: center
   margin-top: 10px
+  font-family: HelveticaNeue
   
-  select.form__input, .form__input[type='text'], .form__input[type='number']
+  .form__input
     box-shadow: inset 0 0 0 1px #dad8de, 0 0 0 transparent
     background-color: white
     color: #433f4a
@@ -49,8 +70,9 @@
     background-position: right 10px center
     background-size: 14px
 
-.add-product-btn
+.product-table__add-btn
   background: #6441a4
+  border: none
   color: white
   display: inline-block
   position: relative

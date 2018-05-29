@@ -1,19 +1,39 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './component.sass';
 import { ProductRow } from './product-row';
+import { fetchProducts } from '../util/api';
 
 export class ProductTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      products: [
-        {"sku": "test1", "cost": {"amount": 1, "type": "bits"}, "inDevelopment": "false", "displayName": "Test 1"},
-        {"sku": "test2", "cost": {"amount": 4, "type": "bits"}, "inDevelopment": "true", "displayName": "Test 1", "broadcast": "true"},
-        {"sku": "test3", "cost": {"amount": 5000, "type": "bits"}, "inDevelopment": "true", "displayName": "Test 1", "broadcast": "true"},
-        {"sku": "test4", "cost": {"amount": 1, "type": "bits"}, "displayName": "Test 1"}
-      ]
+      products: [],
+      error: ''
     };
+  }
+
+  componentDidMount() {
+    fetchProducts(
+      'api.twitch.tv',
+      this.props.clientId,
+      this.handleFetchProductsSuccess.bind(this),
+      this.handleFetchProductsError.bind(this)
+    );
+  }
+
+  handleFetchProductsSuccess(products) {
+    this.setState({
+      products: products,
+      error: ''
+    });
+  }
+
+  handleFetchProductsError(error) {
+    this.setState({
+      error: error
+    });
   }
 
   handleDisplayNameChange(index, event) {
@@ -21,7 +41,7 @@ export class ProductTable extends Component {
     this.setState((prevState, props) => {
       let products = [...prevState['products']];
       let product = products[index];
-      product['displayName'] = value;
+      product.displayName = value;
       return {products: products};
     });
   }
@@ -31,7 +51,7 @@ export class ProductTable extends Component {
     this.setState((prevState, props) => {
       let products = [...prevState['products']];
       let product = products[index];
-      product['sku'] = value;
+      product.sku = value;
       return {products: products};
     });
   }
@@ -41,7 +61,7 @@ export class ProductTable extends Component {
     this.setState((prevState, props) => {
       let products = [...prevState['products']];
       let product = products[index];
-      product['cost']['amount'] = value;
+      product.amount = value;
       return {products: products};
     });
   }
@@ -51,7 +71,7 @@ export class ProductTable extends Component {
     this.setState((prevState, props) => {
       let products = [...prevState['products']];
       let product = products[index];
-      product['inDevelopment'] = value;
+      product.inDevelopment = value;
       return {products: products};
     });
   }
@@ -61,7 +81,7 @@ export class ProductTable extends Component {
     this.setState((prevState, props) => {
       let products = [...prevState['products']];
       let product = products[index];
-      product['broadcast'] = value;
+      product.broadcast = value;
       return {products: products};
     });
   }
@@ -70,11 +90,11 @@ export class ProductTable extends Component {
     this.setState((prevState, props) => {
       let products = [...prevState['products']];
       let product = {
-        "sku": "",
-        "cost": {"amount": 1, "type": "bits"},
-        "inDevelopment": "true",
-        "displayName": "",
-        "broadcast": "true"
+        sku: "",
+        amount: 1,
+        inDevelopment: "true",
+        displayName: "",
+        broadcast: "true"
       };
       products.push(product)
       return {products: products};
@@ -96,6 +116,12 @@ export class ProductTable extends Component {
 
     return (
       <div className="product-table">
+        {this.state.error &&
+          <div className="product-table__error">
+            <h4>Error getting products.</h4>
+            <p>{this.state.error}</p>
+          </div>
+        }
         <div className="product-table__header">
           <div className="text">Product Name</div>
           <div className="text">SKU</div>
@@ -104,10 +130,15 @@ export class ProductTable extends Component {
           <div className="select">Broadcast</div>
         </div>
         {productRows}
-        <button className="add-product-btn" onClick={this.handleAddProductClick.bind(this)}>
+        <button className="product-table__add-btn" onClick={this.handleAddProductClick.bind(this)}>
           Add Product
         </button>
       </div>
     );
   }
+}
+
+ProductTable.propTypes = {
+  clientId: PropTypes.string,
+  token: PropTypes.string
 }

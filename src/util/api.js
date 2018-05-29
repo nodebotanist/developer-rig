@@ -138,3 +138,39 @@ export function fetchUserInfo(host, accessToken, onSuccess, onError) {
       onError(error);
     })
 }
+
+export function fetchProducts(host, clientId, onSuccess, onError) {
+  const api = 'https://' + host + '/v5/bits/extensions/twitch.ext.' + clientId + '/products';
+  //const api = 'https://' + host + '/v5/bits/extensions/twitch.ext.' + 'dppeppelTest' + '/products';
+  
+  return fetch(api, {
+    method: 'GET',
+    headers: {
+      'Client-ID': clientId,
+    },
+    referrer: 'Twitch Developer Rig',
+  }).then(response => response.json())
+    .then(respJson => {
+      if (respJson.error) {
+        onError(respJson.message);
+        return null;
+      }
+      const products = respJson.products;
+      if (!products) {
+        onError('Unable to get products for clientId: ' + clientId);
+        return null;
+      } 
+      const serializedProducts = products.map(p => {
+        return {
+          sku: p.sku || '',
+          displayName: p.displayName || '',
+          amount: p.cost ? p.cost.amount.toString() : '0',
+          inDevelopment: p.inDevelopment ? 'true' : 'false',
+          broadcast: p.broadcast ? 'true' : 'false'
+        }
+      });
+      onSuccess(serializedProducts);
+    }).catch(error => {
+      onError(error);
+    });
+}
