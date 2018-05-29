@@ -16,6 +16,6 @@ export class ProductManagementViewContainer extends Component {
 }
 
 ProductManagementViewContainer.propTypes = {
-  clientId: PropTypes.string,
-  token: PropTypes.string
+  clientId: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired
 }

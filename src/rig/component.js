@@ -263,6 +263,7 @@ export class Rig extends Component {
         <RigNav
           ref="rigNav"
           login={this.state.login}
+          bitsEnabled={this.state.manifest.bits_enabled}
           selectedView={this.state.selectedView}
           viewerHandler={this.viewerHandler}
           configHandler={this.configHandler}

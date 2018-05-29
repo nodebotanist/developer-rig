@@ -41,5 +41,5 @@ export const ProductRow = (props) => {
 }
 
 ProductRow.propTypes = {
-  product: PropTypes.object
+  product: PropTypes.object.isRequired
 }

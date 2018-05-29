@@ -143,9 +143,11 @@ export function fetchProducts(host, clientId, onSuccess, onError) {
   const api = 'https://' + host + '/v5/bits/extensions/twitch.ext.' + clientId + '/products';
   //const api = 'https://' + host + '/v5/bits/extensions/twitch.ext.' + 'dppeppelTest' + '/products';
   
-  return fetch(api, {
+  fetch(api, {
     method: 'GET',
     headers: {
+      'Accept': 'application/vnd.twitchtv.v5+json',
+      'Content-Type': 'application/json',
       'Client-ID': clientId,
     },
     referrer: 'Twitch Developer Rig',
@@ -170,6 +172,38 @@ export function fetchProducts(host, clientId, onSuccess, onError) {
         }
       });
       onSuccess(serializedProducts);
+    }).catch(error => {
+      onError(error);
+    });
+}
+
+export function saveProduct(host, clientId, token, product, onSuccess, onError) {
+  const api = 'https://' + host + '/v5/bits/extensions/twitch.ext.' + clientId + '/products/put';
+  const deserializedProduct = {
+    domain: 'twitch.ext.' + clientId,
+    sku: product.sku,
+    displayName: product.displayName,
+    cost: {
+      amount: product.amount,
+      type: 'bits'
+    },
+    inDevelopment: product.inDevelopment === 'true' ? true : false,
+    broadcast: product.broadcast === 'true' ? true : false
+  };
+
+  fetch(api, {
+    method: 'POST',
+    body: JSON.stringify({ product: deserializedProduct }),
+    headers: {
+      'Accept': 'application/vnd.twitchtv.v5+json',
+      'Content-Type': 'application/json',
+      'Authorization': 'OAuth ' + token,
+      'Client-ID': clientId,
+    },
+    referrer: 'Twitch Developer Rig',
+  }).then(response => response.json())
+    .then(respJson => {
+      onSuccess(respJson);
     }).catch(error => {
       onError(error);
     });
