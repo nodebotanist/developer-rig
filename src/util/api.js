@@ -141,7 +141,6 @@ export function fetchUserInfo(host, accessToken, onSuccess, onError) {
 
 export function fetchProducts(host, clientId, onSuccess, onError) {
   const api = 'https://' + host + '/v5/bits/extensions/twitch.ext.' + clientId + '/products';
-  //const api = 'https://' + host + '/v5/bits/extensions/twitch.ext.' + 'dppeppelTest' + '/products';
   
   fetch(api, {
     method: 'GET',

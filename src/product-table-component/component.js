@@ -9,7 +9,13 @@ export class ProductTable extends Component {
     super(props);
 
     this.state = {
-      products: [],
+      products: [{
+        sku: '',
+        amount: 1,
+        inDevelopment: 'true',
+        displayName: '',
+        broadcast: 'true'
+      }],
       error: ''
     };
   }
@@ -23,53 +29,15 @@ export class ProductTable extends Component {
     );
   }
 
-  handleDisplayNameChange(index, event) {
-    let value = event.target.value;
-    this.setState((prevState, props) => {
+  handleValueChange(index, event) {
+    const value = event.target.value;
+    const fieldName = event.target.name;
+    this.setState(prevState => {
       let products = [...prevState['products']];
       let product = products[index];
-      product.displayName = value;
-      return {products: products};
-    });
-  }
-
-  handleSkuChange(index, event) {
-    let value = event.target.value;
-    this.setState((prevState, props) => {
-      let products = [...prevState['products']];
-      let product = products[index];
-      product.sku = value;
-      return {products: products};
-    });
-  }
-
-  handleAmountChange(index, event) {
-    let value = event.target.value;
-    this.setState((prevState, props) => {
-      let products = [...prevState['products']];
-      let product = products[index];
-      product.amount = value;
-      return {products: products};
-    });
-  }
-
-  handleInDevelopmentChange(index, event) {
-    let value = event.target.value;
-    this.setState((prevState, props) => {
-      let products = [...prevState['products']];
-      let product = products[index];
-      product.inDevelopment = value;
-      return {products: products};
-    });
-  }
-
-  handleBroadcastChange(index, event) {
-    let value = event.target.value;
-    this.setState((prevState, props) => {
-      let products = [...prevState['products']];
-      let product = products[index];
-      product.broadcast = value;
-      return {products: products};
+      product[fieldName] = value;
+      product.dirty = true;
+      return { products: products };
     });
   }
 
@@ -81,47 +49,38 @@ export class ProductTable extends Component {
         amount: 1,
         inDevelopment: 'true',
         displayName: '',
-        broadcast: 'true'
+        broadcast: 'true',
+        dirty: true
       };
       products.push(product)
-      return {products: products};
+      return { products: products };
     });
   }
 
   handleSaveProductsClick(event) {
-    this.setState(prevState => {
-      let products = prevState.products.map(p => {
-        p.saving = true;
-        return p;
-      });
-      return {
-        products: products,
-        saving: true
-      };
+    const dirtyProducts = this.state.products.map((p, i) => {
+      if (p.dirty) {
+        p.saving = true
+        saveProduct(
+          'api.twitch.tv',
+          this.props.clientId,
+          this.props.token,
+          p,
+          this._handleSaveProductSuccess.bind(this, i),
+          this._handleSaveProductError.bind(this, i)
+        );
+      }
+      return p;
     });
-
-    this.state.products.forEach((p, i) => {
-      saveProduct(
-        'api.twitch.tv',
-        this.props.clientId,
-        this.props.token,
-        p,
-        this._handleSaveProductSuccess.bind(this, i),
-        this._handleSaveProductError.bind(this, i)
-      );
+    this.setState({
+      products: dirtyProducts
     });
   }
 
   render() {
     let productRows = this.state.products.map((p, i) => {
       return (
-        <ProductRow key={i} product={p}
-          handleDisplayNameChange={this.handleDisplayNameChange.bind(this, i)}
-          handleSkuChange={this.handleSkuChange.bind(this, i)}
-          handleAmountChange={this.handleAmountChange.bind(this, i)}
-          handleInDevelopmentChange={this.handleInDevelopmentChange.bind(this, i)}
-          handleBroadcastChange={this.handleBroadcastChange.bind(this, i)}
-        />
+        <ProductRow key={i} product={p} handleValueChange={this.handleValueChange.bind(this, i)} />
       );
     });
 
@@ -134,11 +93,12 @@ export class ProductTable extends Component {
           </div>
         }
         <div className="product-table__header">
-          <div className="text">Product Name</div>
-          <div className="text">SKU</div>
-          <div className="text">Amount (in Bits)</div>
-          <div className="select">In Development</div>
-          <div className="select">Broadcast</div>
+          <div className="text-col">Product Name</div>
+          <div className="text-col">SKU</div>
+          <div className="text-col">Amount (in Bits)</div>
+          <div className="select-col">In Development</div>
+          <div className="select-col">Broadcast</div>
+          <div className="dirty-col"></div>
         </div>
         {productRows}
         <div className="product-table__buttons">
@@ -154,15 +114,11 @@ export class ProductTable extends Component {
   }
 
   _handleFetchProductsSuccess(products) {
-    this.setState({
-      products: products
-    });
+    this.setState({ products: products });
   }
 
   _handleFetchProductsError(error) {
-    this.setState({
-      error: error
-    });
+    this.setState({ error: error });
   }
 
   _handleSaveProductSuccess(index) {
@@ -170,6 +126,7 @@ export class ProductTable extends Component {
       let products = [...prevState['products']];
       let product = products[index];
       product.saving = false;
+      product.dirty = false;
       return { products: products };
     });
   }

@@ -1,8 +1,17 @@
 .product-table
-  min-width: 1000px
-  max-width: 1250px
+  // min-width: 1000px
+  // max-width: 1250px
   margin-top: 3rem
   overflow-x: hidden
+
+  .text-col
+    width: 12rem
+
+  .select-col
+    width: 10rem
+
+  .dirty-col
+    width: 1rem
 
 .product-table__error
   background: #faf9fa
@@ -26,30 +35,25 @@
   display: flex
   justify-content: space-between
   align-items: center
-  margin-bottom: 3px
-  font-family: HelveticaNeue-Medium;
-
-  *
-    padding-left: 3px
-
-  .text
-    width: 195.5px
-
-  .select
-    width: 162px
+  margin-bottom: 0.8rem
+  font-family: HelveticaNeue-Medium
 
 .product-table__row
   display: flex
   justify-content: space-between
   align-items: center
-  margin-top: 10px
+  margin-top: 0.5rem
   font-family: HelveticaNeue
+
+  .dirty-indicator
+    height: 1rem
+    fill: #6441a4
   
   .form__input
     box-shadow: inset 0 0 0 1px #dad8de, 0 0 0 transparent
     background-color: white
     color: #433f4a
-    width: 175.5px
+    width: 80%
     height: 20px
     padding: 5px 10px
     border: none
@@ -62,7 +66,7 @@
 
 
   select.form__input
-    width: 162px
+    width: 90%
     height: 30px
     cursor: pointer
     background-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2012%2012%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20fill%3D%22%23898395%22%3E%3Cpolygon%20points%3D%226%2C1%2010%2C5%202%2C5%22/%3E%20%3Cpolygon%20points%3D%226%2C11%2010%2C7%202%2C7%22/%3E%3C/svg%3E")
@@ -73,14 +77,16 @@
 .product-table__buttons
   display: flex
   justify-content: flex-end
+  align-items: center
+  margin-top: 1.3rem
+  padding-right: 2rem
 
   button
     border: none
     display: inline-block
     position: relative
     width: 103px
-    margin-left: 10px
-    margin-top: 20px
+    margin-left: 1rem
     padding: 0 1rem
     transition: background 0.12s ease-in, color 0.12s ease-in, box-shadow 0.12s ease-in
     font-size: 12px
@@ -88,7 +94,7 @@
     line-height: 2rem
     white-space: nowrap
     cursor: pointer
-
+  
   .product-table__add-button
     background: #6441a4
     color: white

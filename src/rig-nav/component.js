@@ -32,7 +32,7 @@ export class RigNav extends Component {
           <a
             className={this.props.selectedView === CONFIGURATIONS ? "top-nav-item top-nav-item__selected" : "top-nav-item"}
             onClick={this.openConfigurationsHandler}>Configurations</a>
-          {!this.props.bitsEnabled && 
+          {this.props.bitsEnabled && 
             <a
               className={this.props.selectedView === PRODUCT_MANAGEMENT ? "top-nav-item top-nav-item__selected" : "top-nav-item"}
               onClick={this.props.openProductManagementHandler}>Manage Products</a>
