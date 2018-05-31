@@ -2,13 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const ProductRow = (props) => {
-  let className = 'product-table__row';
-  if (props.product.dirty) {
-    //className += ' dirty';
-  }
-
   return (
-    <div className={className}>
+    <div className="product-table__row">
       <div className="text-col">
         <input type="text" 
           className="form__input"

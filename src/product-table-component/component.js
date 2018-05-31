@@ -32,19 +32,17 @@ export class ProductTable extends Component {
   handleValueChange(index, event) {
     const value = event.target.value;
     const fieldName = event.target.name;
-    this.setState(prevState => {
-      let products = [...prevState['products']];
-      let product = products[index];
-      product[fieldName] = value;
-      product.dirty = true;
-      return { products: products };
-    });
+    const partial = {
+      [fieldName]: value,
+      dirty: true
+    };
+    this._updateProduct(index, partial);
   }
 
   handleAddProductClick(event) {
-    this.setState((prevState, props) => {
-      let products = [...prevState['products']];
-      let product = {
+    this.setState(prevState => {
+      const products = [...prevState['products']];
+      const product = {
         sku: '',
         amount: 1,
         inDevelopment: 'true',
@@ -78,7 +76,7 @@ export class ProductTable extends Component {
   }
 
   render() {
-    let productRows = this.state.products.map((p, i) => {
+    const productRows = this.state.products.map((p, i) => {
       return (
         <ProductRow key={i} product={p} handleValueChange={this.handleValueChange.bind(this, i)} />
       );
@@ -113,6 +111,21 @@ export class ProductTable extends Component {
     );
   }
 
+  _updateProduct(index, partial) {
+    this.setState(prevState => {
+      const products = prevState.products.map((product, idx) => {
+        if (idx === index) {
+           return {
+              ...product,
+              ...partial
+           };
+        }
+        return product;
+     });
+     return { products: products };
+    });
+  }
+
   _handleFetchProductsSuccess(products) {
     this.setState({ products: products });
   }
@@ -122,22 +135,17 @@ export class ProductTable extends Component {
   }
 
   _handleSaveProductSuccess(index) {
-    this.setState(prevState => {
-      let products = [...prevState['products']];
-      let product = products[index];
-      product.saving = false;
-      product.dirty = false;
-      return { products: products };
-    });
+    const partial = {
+      dirty: false
+    };
+    this._updateProduct(index, partial);
   }
 
   _handleSaveProductError(index, error) {
-    this.setState(prevState => {
-      let products = [...prevState['products']];
-      let product = products[index];
-      product.saving = false;
-      return { products: products };
-    });
+    const partial = {
+      error: error
+    };
+    this._updateProduct(index, partial);
   }
 }
 
