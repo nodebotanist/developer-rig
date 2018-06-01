@@ -53,4 +53,5 @@ RigNav.propTypes = {
   selectedView: PropTypes.string,
   error: PropTypes.string,
   login: PropTypes.object,
+  bitsEnabled: PropTypes.bool
 };
